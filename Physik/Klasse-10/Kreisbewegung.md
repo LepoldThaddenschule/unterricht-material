@@ -1,34 +1,6 @@
 # Unterrichtsverlauf: Gleichförmige Kreisbewegung
 
-**Fach:** Physik  
-**Klasse:** 10  
-**Dauer:** 45 Minuten  
-**Thema:** Einführung in die gleichförmige Kreisbewegung  
-**Stundenziel:** Die Schülerinnen und Schüler erkennen, dass bei einer gleichförmigen Kreisbewegung trotz konstantem Betrag der Geschwindigkeit eine Beschleunigung vorliegt, weil sich die Richtung der Geschwindigkeit ständig ändert.
-
----
-
-## 1. Lernziele
-
-Die Schülerinnen und Schüler können ...
-
-- beschreiben, was man unter einer gleichförmigen Kreisbewegung versteht.
-- erklären, warum bei einer Kreisbewegung eine Kraft zum Kreismittelpunkt nötig ist.
-- die Begriffe **Umlaufdauer**, **Frequenz**, **Bahngeschwindigkeit** und **Zentripetalkraft** verwenden.
-- einfache Berechnungen zur Bahngeschwindigkeit durchführen.
-
----
-
-## 2. Benötigtes Vorwissen
-
-- Geschwindigkeit als Weg pro Zeit
-- gleichförmige Bewegung
-- Kraft als Ursache von Bewegungsänderungen
-- Kreisumfang \( U = 2\pi r \)
-
----
-
-## 3. Material
+## 1. Aufbau der Stunde
 
 - Ball oder Gummistopfen an einer Schnur
 - ggf. Video/Animation einer Kreisbewegung
@@ -166,7 +138,7 @@ v = \frac{2\pi \cdot 0{,}50\,\text{m}}{2{,}0\,\text{s}}
 v \approx 1{,}57\,\text{m/s}
 \]
 
-Das Spielzeugauto hat eine Bahngeschwindigkeit von etwa
+Das Spielzeugauto hat eine Bahngeschwindigkeite von etwa
 
 \[
 v \approx 1{,}6\,\text{m/s}
