@@ -1,0 +1,9 @@
+# Visual Studio lokale Dateien
+.vs/
+
+# VS Code lokale Einstellungen, optional
+.vscode/
+
+# Windows
+Thumbs.db
+desktop.ini
