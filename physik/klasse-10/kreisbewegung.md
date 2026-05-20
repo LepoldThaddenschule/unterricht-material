@@ -1,22 +1,31 @@
-# Unterrichtsverlauf: Gleichförmige Kreisbewegung
+Unterrichtsverlauf: Gleichförmige Kreisbewegung
 
-## 1. Aufbau der Stunde
+# 1. Matiral
 
 - Ball oder Gummistopfen an einer Schnur
-- ggf. Video/Animation einer Kreisbewegung
-- Tafel/Beamer
-- Arbeitsblatt oder Heft
-- Taschenrechner
+- Brett mit Kette und Glas
+- Animation Kreisbewegung
+
 
 ---
 
-## 4. Unterrichtsverlauf
+# 2. Unterrichtsverlauf
+## 1. Einstieg 
+Ball/Gummistopfen loslassen - Wie fliegt er weiter?
 
-| Phase | Zeit | Inhalt | Sozialform | Medien |
-|---|---:|---|---|---|
-| Einstieg | 5 min | Lehrkraft zeigt einen Ball/Gummistopfen an einer Schnur und lässt ihn im Kreis rotieren. Impulsfrage: „Was passiert, wenn ich die Schnur loslasse?“ | Plenum | Demonstration |
-| Problemfrage | 5 min | Schülerinnen und Schüler vermuten die Flugbahn nach dem Loslassen. Diskussion: Fliegt der Körper nach außen oder tangential weiter? | Plenum | Tafel |
-| Erarbeitung I | 10 min | Analyse der Bewegung: Der Betrag der Geschwindigkeit bleibt gleich, aber die Richtung ändert sich ständig. Daraus folgt: Es liegt eine Beschleunigung vor. | Lehrer-Schüler-Gespräch | Skizze |
+## 2. Analyse
+Wleche Art der Geschwindigkeit?
+
+## 3. Sicherung:
+Bewegt sich ein Objekt mit **konstantem Geschwindikeitsbetrag** (|v|=const) auf einer Kreisbahn, so spricht man von einer gleichförmigen **Kreisbewegung**.
+Wichtige physikalische Größen:
+- Radius \(r\) in [m]
+- Umlaufdauer/Periodendauer \(T\) in [s]: Zeit die für eine vollständige Umdrehung benötigt wird
+- Frequenz \(f\) in [Hz]: Anzahl der Umdrehungen pro Sekunde ($f = \frac{n}{t_n}=\frac{1}{T}$)
+- Bahngeschwindigkeit \(v\) in [m/s]: Geschwindigkeitsbetrag entlang der Kreisbahn
+
+
+
 | Sicherung I | 5 min | Einführung der Begriffe: gleichförmige Kreisbewegung, Umlaufdauer \(T\), Frequenz \(f\), Bahngeschwindigkeit \(v\). | Plenum | Tafelbild |
 | Erarbeitung II | 10 min | Herleitung der Bahngeschwindigkeit: In einer Umlaufdauer legt der Körper den Kreisumfang zurück. Daher gilt: \(v = \frac{2\pi r}{T}\). | Plenum / Partnerarbeit | Tafel |
 | Vertiefung | 5 min | Kurze Rechenaufgabe: Ein Körper bewegt sich auf einem Kreis mit \(r = 0{,}5\,\text{m}\) und \(T = 2\,\text{s}\). Berechne \(v\). | Einzelarbeit | Heft |
