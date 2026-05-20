@@ -1,7 +1,6 @@
 Unterrichtsverlauf: Gleichförmige Kreisbewegung
 
 # 1. Matiral
-
 - Ball oder Gummistopfen an einer Schnur
 - Brett mit Kette und Glas
 - Animation Kreisbewegung
@@ -11,18 +10,21 @@ Unterrichtsverlauf: Gleichförmige Kreisbewegung
 
 # 2. Unterrichtsverlauf
 ## 1. Einstieg 
-Ball/Gummistopfen loslassen - Wie fliegt er weiter?
+Ball/Gummistopfen nicht loslassen
+### Analyse
+Wie können wir diese Bewegung beschreiben?
 
-## 2. Analyse
-Wleche Art der Geschwindigkeit?
-
-## 3. Sicherung:
+## 2. Sicherung:
 Bewegt sich ein Objekt mit **konstantem Geschwindikeitsbetrag** (|v|=const) auf einer Kreisbahn, so spricht man von einer gleichförmigen **Kreisbewegung**.
 Wichtige physikalische Größen:
 - Radius \(r\) in [m]
 - Umlaufdauer/Periodendauer \(T\) in [s]: Zeit die für eine vollständige Umdrehung benötigt wird
 - Frequenz \(f\) in [Hz]: Anzahl der Umdrehungen pro Sekunde ($f = \frac{n}{t_n}=\frac{1}{T}$)
 - Bahngeschwindigkeit \(v\) in [m/s]: Geschwindigkeitsbetrag entlang der Kreisbahn
+
+## 3. Kräfte 
+### Ball/Gummistopfen loslassen - Wie fliegt er weiter?
+
 
 
 
