@@ -7,4 +7,4 @@ title: Physik Klasse 10
 
 ## Themen
 
-- [Kreisbewegung](kreisbewegung.html)
+- [Kreisbewegung](kreisbewegung.md)
