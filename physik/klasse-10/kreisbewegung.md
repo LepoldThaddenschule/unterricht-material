@@ -1,3 +1,8 @@
+---
+layout: default
+title: kreisbewegung
+---
+
 Unterrichtsverlauf: Gleichförmige Kreisbewegung
 
 # Material
