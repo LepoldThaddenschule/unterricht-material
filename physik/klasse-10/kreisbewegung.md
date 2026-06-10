@@ -51,3 +51,21 @@ Eine Kreisbewegung ist eine beschleunigte Bewegung. Auch wenn sich der Betrag de
 
 Bobycar, Kurve oder Drehen mit Masse an Schnur.
 
+Folgenden Abhöngigkeiten:
+- v
+- m
+- r
+
+### Sicherung:
+Die Zentripedalkraft ist definiert als
+$$
+F_z=\frac{mv^2}{r}.
+$$
+
+### Zusammenhang:
+mit $v=\omega\cdot r$ gilt:
+$$
+F_Z=\frac{mv^2}{r}=\frac{m(\omega\cdot r)^2 }{r}=m\omega^2r
+$$
+
+[[]]

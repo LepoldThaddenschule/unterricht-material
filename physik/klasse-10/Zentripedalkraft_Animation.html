@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Interaktive Animation: Zentripetalkraft</title>
+  <style>
+    :root {
+      --bg: #080b12;
+      --panel: #111827;
+      --panel2: #182236;
+      --text: #f4f7fb;
+      --muted: #b9c4d6;
+      --grid: rgba(255,255,255,0.10);
+      --orbit: rgba(255,255,255,0.45);
+      --mass: #f8fafc;
+      --r: #60a5fa;
+      --v: #34d399;
+      --f: #fb7185;
+      --accent: #fbbf24;
+      --good: #22c55e;
+      --warn: #f97316;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at 25% 15%, #1d2a44 0%, var(--bg) 42%, #05070d 100%);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    .app {
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(560px, 1fr) 430px;
+      gap: 16px;
+      padding: 16px;
+    }
+
+    .stage {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      background: rgba(7, 10, 18, 0.72);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .badge {
+      position: absolute;
+      left: 24px;
+      top: 20px;
+      font-size: clamp(22px, 2.0vw, 34px);
+      font-weight: 750;
+      letter-spacing: 0.2px;
+      text-shadow: 0 3px 20px rgba(0,0,0,0.7);
+      pointer-events: none;
+    }
+
+    .subbadge {
+      margin-top: 6px;
+      font-size: clamp(15px, 1.2vw, 19px);
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .legend {
+      position: absolute;
+      left: 24px;
+      bottom: 22px;
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      font-size: 18px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 10px 14px;
+      backdrop-filter: blur(8px);
+    }
+
+    .legend span { display: inline-flex; align-items: center; gap: 8px; }
+    .dot { width: 18px; height: 6px; border-radius: 4px; display: inline-block; }
+    .dot.r { background: var(--r); }
+    .dot.v { background: var(--v); }
+    .dot.f { background: var(--f); }
+
+    .side {
+      border-radius: 24px;
+      background: rgba(17, 24, 39, 0.92);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 18px;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      line-height: 1.1;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.35;
+      margin-bottom: 16px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.025));
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .card h2 {
+      font-size: 18px;
+      margin: 0 0 12px;
+      color: #eaf1ff;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 78px 1fr 86px;
+      gap: 10px;
+      align-items: center;
+      margin: 12px 0;
+      font-size: 16px;
+    }
+
+    label { color: #e5edff; font-weight: 650; }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      transform: scaleY(1.15);
+    }
+
+    .value {
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      color: #fff;
+      font-weight: 700;
+      background: rgba(0,0,0,0.22);
+      padding: 5px 7px;
+      border-radius: 10px;
+    }
+
+    .modeGroup, .checks, .buttons {
+      display: grid;
+      gap: 10px;
+    }
+
+    .radio, .check {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      background: rgba(0,0,0,0.22);
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    input[type="radio"], input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-top: 0;
+      accent-color: var(--accent);
+      flex: 0 0 auto;
+    }
+
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 13px 12px;
+      background: var(--accent);
+      color: #111827;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: rgba(255,255,255,0.12);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .formula {
+      font-size: 21px;
+      line-height: 1.55;
+      text-align: center;
+      font-weight: 750;
+      letter-spacing: 0.2px;
+    }
+
+    .formula .small {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+
+    .numbers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .numBox {
+      background: rgba(0,0,0,0.22);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 10px;
+      min-height: 76px;
+    }
+
+    .numBox .name {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .numBox .big {
+      font-size: 24px;
+      font-weight: 850;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .numBox .unit {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 600;
+      margin-left: 3px;
+    }
+
+    .comparison {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .comparison strong { color: var(--text); }
+    .blue { color: var(--r); }
+    .green { color: var(--v); }
+    .red { color: var(--f); }
+    .orange { color: var(--accent); }
+
+    @media (max-width: 1000px) {
+      body { overflow: auto; }
+      .app { height: auto; min-height: 100vh; grid-template-columns: 1fr; }
+      .stage { height: 62vh; min-height: 520px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="stage">
+      <canvas id="canvas"></canvas>
+      <div class="badge">
+        Zentripetalkraft
+        <div class="subbadge" id="modeBadge">Bei gleicher Bahngeschwindigkeit: kleinerer Radius → größere Kraft</div>
+      </div>
+      <div class="legend">
+        <span><i class="dot r"></i> Radiusvektor \(r\)</span>
+        <span><i class="dot v"></i> Geschwindigkeitsvektor \(v\)</span>
+        <span><i class="dot f"></i> Kraftvektor \(F_Z\)</span>
+      </div>
+    </section>
+
+    <aside class="side">
+      <h1>Beamer-Steuerung</h1>
+      <div class="hint">Ziehe die Regler oder nutze die Pfeiltasten. Die Vektoren lassen sich einzeln ein- und ausblenden.</div>
+
+      <div class="card">
+        <h2>Was bleibt konstant, wenn du den Radius änderst?</h2>
+        <div class="modeGroup">
+          <label class="radio"><input type="radio" name="mode" value="v" checked> <span><strong>Bahngeschwindigkeit \(v\) bleibt konstant</strong><br><span class="green">Dann gilt: \(F_Z \sim 1/r\)</span> — enger fahren fühlt sich stärker an.</span></label>
+          <label class="radio"><input type="radio" name="mode" value="omega"> <span><strong>Winkelgeschwindigkeit \(\omega\) bleibt konstant</strong><br><span class="orange">Dann gilt: \(F_Z \sim r\)</span> — wie beim Karussell.</span></label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Parameter</h2>
+        <div class="row">
+          <label for="rSlider">Radius r</label>
+          <input id="rSlider" type="range" min="0.5" max="5" step="0.1" value="3">
+          <div class="value" id="rVal">3.0 m</div>
+        </div>
+        <div class="row">
+          <label for="vSlider">v</label>
+          <input id="vSlider" type="range" min="0.2" max="15" step="0.1" value="4">
+          <div class="value" id="vVal">4.0 m/s</div>
+        </div>
+        <div class="row">
+          <label for="omegaSlider">ω</label>
+          <input id="omegaSlider" type="range" min="0.05" max="20" step="0.05" value="1.33">
+          <div class="value" id="omegaVal">1.33 rad/s</div>
+        </div>
+        <div class="row">
+          <label for="mSlider">Masse m</label>
+          <input id="mSlider" type="range" min="0.1" max="5" step="0.1" value="1">
+          <div class="value" id="mVal">1.0 kg</div>
+        </div>
+        <div class="row">
+          <label for="slowSlider">Zeitlupe</label>
+          <input id="slowSlider" type="range" min="0.05" max="1" step="0.05" value="0.45">
+          <div class="value" id="slowVal">45 %</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Vektoren und Anzeige</h2>
+        <div class="checks">
+          <label class="check"><input id="showR" type="checkbox" checked> Radiusvektor \(\vec r\) einzeichnen</label>
+          <label class="check"><input id="showV" type="checkbox" checked> Tangentialgeschwindigkeit \(\vec v\) einzeichnen</label>
+          <label class="check"><input id="showF" type="checkbox" checked> Zentripetalkraft \(\vec F_Z\) einzeichnen</label>
+          <label class="check"><input id="showTrace" type="checkbox" checked> Bahn und Spur anzeigen</label>
+          <label class="check"><input id="showGrid" type="checkbox" checked> Meter-Raster anzeigen</label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Aktuelle Werte</h2>
+        <div class="numbers">
+          <div class="numBox"><div class="name">Zentripetalkraft</div><div class="big"><span id="Fbig">5.3</span><span class="unit">N</span></div></div>
+          <div class="numBox"><div class="name">Umlaufzeit</div><div class="big"><span id="Tbig">4.7</span><span class="unit">s</span></div></div>
+          <div class="numBox"><div class="name">Zusammenhang</div><div class="big"><span id="relationBig">1/r</span></div></div>
+          <div class="numBox"><div class="name">Kopplung</div><div class="big" style="font-size:19px"><span id="couplingBig">v=ωr</span></div></div>
+        </div>
+      </div>
+
+      <div class="card formula">
+        <span>\(F_Z = \dfrac{m v^2}{r} = m\omega^2 r\)</span>
+        <span class="small" id="explainText">Bei festem \(v\): Halbierst du \(r\), verdoppelt sich \(F_Z\).</span>
+      </div>
+
+      <div class="card comparison" id="compareText">
+        Bei den aktuellen Werten würde ein halb so großer Radius bei gleichem <strong>v</strong> ungefähr die doppelte Kraft bedeuten.
+      </div>
+
+      <div class="buttons">
+        <button id="pauseBtn">Pause / Weiter</button>
+        <button id="resetBtn" class="secondary">Zurücksetzen</button>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    const els = {
+      r: document.getElementById('rSlider'),
+      v: document.getElementById('vSlider'),
+      omega: document.getElementById('omegaSlider'),
+      m: document.getElementById('mSlider'),
+      slow: document.getElementById('slowSlider'),
+      rVal: document.getElementById('rVal'),
+      vVal: document.getElementById('vVal'),
+      omegaVal: document.getElementById('omegaVal'),
+      mVal: document.getElementById('mVal'),
+      slowVal: document.getElementById('slowVal'),
+      showR: document.getElementById('showR'),
+      showV: document.getElementById('showV'),
+      showF: document.getElementById('showF'),
+      showTrace: document.getElementById('showTrace'),
+      showGrid: document.getElementById('showGrid'),
+      Fbig: document.getElementById('Fbig'),
+      Tbig: document.getElementById('Tbig'),
+      relationBig: document.getElementById('relationBig'),
+      couplingBig: document.getElementById('couplingBig'),
+      explainText: document.getElementById('explainText'),
+      compareText: document.getElementById('compareText'),
+      modeBadge: document.getElementById('modeBadge'),
+      pauseBtn: document.getElementById('pauseBtn'),
+      resetBtn: document.getElementById('resetBtn')
+    };
+
+    const state = {
+      r: 3,
+      v: 4,
+      omega: 4 / 3,
+      m: 1,
+      slow: 0.45,
+      mode: 'v',
+      theta: -0.6,
+      paused: false,
+      trace: []
+    };
+
+    function val(id) { return parseFloat(id.value); }
+    function clamp(x, lo, hi) { return Math.max(lo, Math.min(hi, x)); }
+    function fmt(x, digits = 1) { return Number(x).toFixed(digits); }
+
+    function getMode() {
+      return document.querySelector('input[name="mode"]:checked').value;
+    }
+
+    function setSliderValue(slider, value) {
+      const min = parseFloat(slider.min);
+      const max = parseFloat(slider.max);
+      slider.value = String(clamp(value, min, max));
+    }
+
+    function syncFromState() {
+      setSliderValue(els.r, state.r);
+      setSliderValue(els.v, state.v);
+      setSliderValue(els.omega, state.omega);
+      setSliderValue(els.m, state.m);
+      setSliderValue(els.slow, state.slow);
+      updateLabels();
+    }
+
+    function updateLabels() {
+      state.r = val(els.r);
+      state.v = val(els.v);
+      state.omega = val(els.omega);
+      state.m = val(els.m);
+      state.slow = val(els.slow);
+      state.mode = getMode();
+
+      const F = state.m * state.v * state.v / state.r;
+      const T = 2 * Math.PI / Math.max(0.0001, state.omega);
+
+      els.rVal.textContent = fmt(state.r, 1) + ' m';
+      els.vVal.textContent = fmt(state.v, 1) + ' m/s';
+      els.omegaVal.textContent = fmt(state.omega, 2) + ' rad/s';
+      els.mVal.textContent = fmt(state.m, 1) + ' kg';
+      els.slowVal.textContent = Math.round(state.slow * 100) + ' %';
+      els.Fbig.textContent = F < 100 ? fmt(F, 1) : fmt(F, 0);
+      els.Tbig.textContent = T < 100 ? fmt(T, 1) : fmt(T, 0);
+      els.couplingBig.textContent = 'v = ωr';
+
+      if (state.mode === 'v') {
+        els.relationBig.textContent = '1/r';
+        els.explainText.innerHTML = 'Bei festem \\(v\\): Halbierst du \\(r\\), verdoppelt sich \\(F_Z\\).';
+        els.modeBadge.textContent = 'Bei gleicher Bahngeschwindigkeit: kleinerer Radius → größere Kraft';
+        const halfF = state.m * state.v * state.v / Math.max(0.25, state.r / 2);
+        const doubleF = state.m * state.v * state.v / (state.r * 2);
+        els.compareText.innerHTML = 'Radiusvergleich bei gleichem <strong>v</strong>: <br>Halber Radius → <strong class="red">' + fmt(halfF, 1) + ' N</strong>, doppelter Radius → <strong class="red">' + fmt(doubleF, 1) + ' N</strong>.';
+      } else {
+        els.relationBig.textContent = 'r';
+        els.explainText.innerHTML = 'Bei festem \\(\\omega\\): Verdoppelst du \\(r\\), verdoppelt sich \\(F_Z\\).';
+        els.modeBadge.textContent = 'Bei gleicher Winkelgeschwindigkeit: größerer Radius → größere Kraft';
+        const halfF = state.m * state.omega * state.omega * (state.r / 2);
+        const doubleF = state.m * state.omega * state.omega * (state.r * 2);
+        els.compareText.innerHTML = 'Radiusvergleich bei gleichem <strong>ω</strong>: <br>Halber Radius → <strong class="red">' + fmt(halfF, 1) + ' N</strong>, doppelter Radius → <strong class="red">' + fmt(doubleF, 1) + ' N</strong>.';
+      }
+    }
+
+    // Keep v = omega * r physically consistent.
+    els.v.addEventListener('input', () => {
+      state.v = val(els.v);
+      state.r = val(els.r);
+      state.omega = state.v / state.r;
+      document.querySelector('input[name="mode"][value="v"]').checked = true;
+      setSliderValue(els.omega, state.omega);
+      updateLabels();
+    });
+
+    els.omega.addEventListener('input', () => {
+      state.omega = val(els.omega);
+      state.r = val(els.r);
+      state.v = state.omega * state.r;
+      document.querySelector('input[name="mode"][value="omega"]').checked = true;
+      setSliderValue(els.v, state.v);
+      updateLabels();
+    });
+
+    els.r.addEventListener('input', () => {
+      state.r = val(els.r);
+      state.mode = getMode();
+      if (state.mode === 'v') {
+        state.v = val(els.v);
+        state.omega = state.v / state.r;
+        setSliderValue(els.omega, state.omega);
+      } else {
+        state.omega = val(els.omega);
+        state.v = state.omega * state.r;
+        setSliderValue(els.v, state.v);
+      }
+      state.trace = [];
+      updateLabels();
+    });
+
+    els.m.addEventListener('input', updateLabels);
+    els.slow.addEventListener('input', updateLabels);
+
+    document.querySelectorAll('input[name="mode"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        state.mode = getMode();
+        state.r = val(els.r);
+        if (state.mode === 'v') {
+          state.v = val(els.v);
+          state.omega = state.v / state.r;
+          setSliderValue(els.omega, state.omega);
+        } else {
+          state.omega = val(els.omega);
+          state.v = state.omega * state.r;
+          setSliderValue(els.v, state.v);
+        }
+        state.trace = [];
+        updateLabels();
+      });
+    });
+
+    [els.showR, els.showV, els.showF, els.showTrace, els.showGrid].forEach(el => {
+      el.addEventListener('change', () => { state.trace = []; });
+    });
+
+    els.pauseBtn.addEventListener('click', () => { state.paused = !state.paused; });
+    els.resetBtn.addEventListener('click', () => {
+      state.r = 3;
+      state.v = 4;
+      state.omega = 4 / 3;
+      state.m = 1;
+      state.slow = 0.45;
+      state.theta = -0.6;
+      state.trace = [];
+      state.paused = false;
+      document.querySelector('input[name="mode"][value="v"]').checked = true;
+      syncFromState();
+    });
+
+    function resize() {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      canvas.width = Math.floor(rect.width * dpr);
+      canvas.height = Math.floor(rect.height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    window.addEventListener('resize', resize);
+
+    function drawArrow(x1, y1, x2, y2, color, label, labelOffset = 0) {
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const len = Math.hypot(dx, dy);
+      if (len < 1) return;
+      const ux = dx / len;
+      const uy = dy / len;
+      const head = 18;
+      const width = 7;
+
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineWidth = width;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2 - ux * head, y2 - uy * head);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(x2, y2);
+      ctx.lineTo(x2 - ux * head - uy * head * 0.45, y2 - uy * head + ux * head * 0.45);
+      ctx.lineTo(x2 - ux * head + uy * head * 0.45, y2 - uy * head - ux * head * 0.45);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.font = '700 22px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.shadowColor = 'rgba(0,0,0,0.8)';
+      ctx.shadowBlur = 8;
+      const lx = x2 + uy * (24 + labelOffset) + ux * 10;
+      const ly = y2 - ux * (24 + labelOffset) + uy * 10;
+      ctx.fillText(label, lx, ly);
+      ctx.restore();
+    }
+
+    function drawGrid(cx, cy, pxPerMeter, w, h) {
+      ctx.save();
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.lineWidth = 1;
+      for (let x = cx % pxPerMeter; x < w; x += pxPerMeter) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
+      for (let y = cy % pxPerMeter; y < h; y += pxPerMeter) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function drawTextPanel(x, y, lines) {
+      ctx.save();
+      const width = 330;
+      const height = 34 + lines.length * 28;
+      ctx.fillStyle = 'rgba(0,0,0,0.38)';
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+      ctx.lineWidth = 1;
+      roundRect(ctx, x, y, width, height, 15);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.font = '700 19px system-ui, sans-serif';
+      ctx.fillStyle = '#f8fafc';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      lines.forEach((line, i) => ctx.fillText(line, x + 18, y + 16 + i * 28));
+      ctx.restore();
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    function render(now) {
+      if (!render.last) render.last = now;
+      const dt = Math.min(0.05, (now - render.last) / 1000);
+      render.last = now;
+
+      updateLabels();
+      if (!state.paused) {
+        state.theta += state.omega * dt * state.slow;
+      }
+
+      const rect = canvas.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const cx = w * 0.50;
+      const cy = h * 0.53;
+      const pxPerMeter = Math.min(w, h) * 0.082;
+      const R = state.r * pxPerMeter;
+
+      if (els.showGrid.checked) drawGrid(cx, cy, pxPerMeter, w, h);
+
+      // Soft radial glow
+      const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w, h) * 0.65);
+      glow.addColorStop(0, 'rgba(96,165,250,0.12)');
+      glow.addColorStop(0.55, 'rgba(255,255,255,0.02)');
+      glow.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, w, h);
+
+      // Orbit
+      if (els.showTrace.checked) {
+        ctx.save();
+        ctx.strokeStyle = 'rgba(255,255,255,0.38)';
+        ctx.lineWidth = 3;
+        ctx.setLineDash([10, 11]);
+        ctx.beginPath();
+        ctx.arc(cx, cy, R, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      const x = cx + R * Math.cos(state.theta);
+      const y = cy + R * Math.sin(state.theta);
+      const radialUnit = { x: Math.cos(state.theta), y: Math.sin(state.theta) };
+      const tangentUnit = { x: -Math.sin(state.theta), y: Math.cos(state.theta) };
+
+      if (els.showTrace.checked) {
+        state.trace.push({x, y});
+        if (state.trace.length > 115) state.trace.shift();
+        ctx.save();
+        for (let i = 1; i < state.trace.length; i++) {
+          const a = i / state.trace.length;
+          ctx.strokeStyle = 'rgba(251,191,36,' + (0.04 + 0.32 * a) + ')';
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.moveTo(state.trace[i - 1].x, state.trace[i - 1].y);
+          ctx.lineTo(state.trace[i].x, state.trace[i].y);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      // Center
+      ctx.save();
+      ctx.fillStyle = '#fbbf24';
+      ctx.strokeStyle = 'rgba(255,255,255,0.65)';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.font = '700 18px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#f4f7fb';
+      ctx.fillText('Zentrum', cx, cy + 34);
+      ctx.restore();
+
+      const F = state.m * state.v * state.v / state.r;
+      const vLen = clamp(32 + state.v * 14, 40, 190);
+      const fLen = clamp(28 + Math.sqrt(F) * 22, 35, 220);
+
+      if (els.showR.checked) {
+        drawArrow(cx, cy, x, y, '#60a5fa', 'r');
+      }
+      if (els.showV.checked) {
+        drawArrow(x, y, x + tangentUnit.x * vLen, y + tangentUnit.y * vLen, '#34d399', 'v');
+      }
+      if (els.showF.checked) {
+        drawArrow(x, y, x - radialUnit.x * fLen, y - radialUnit.y * fLen, '#fb7185', 'Fₙ');
+      }
+
+      // Mass point
+      ctx.save();
+      ctx.shadowColor = 'rgba(255,255,255,0.65)';
+      ctx.shadowBlur = 20;
+      ctx.fillStyle = '#f8fafc';
+      ctx.strokeStyle = '#111827';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.arc(x, y, clamp(14 + state.m * 3, 15, 29), 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+
+      // Draw labels and numerical info on canvas
+      const modeLine = state.mode === 'v' ? 'Modus: v bleibt beim r-Ändern konstant' : 'Modus: ω bleibt beim r-Ändern konstant';
+      const relationLine = state.mode === 'v' ? 'Folge: FZ ∝ 1/r' : 'Folge: FZ ∝ r';
+      drawTextPanel(24, Math.max(96, h - 188), [
+        modeLine,
+        relationLine,
+        'FZ = ' + (F < 100 ? fmt(F, 1) : fmt(F, 0)) + ' N',
+        'v = ' + fmt(state.v, 1) + ' m/s,  ω = ' + fmt(state.omega, 2) + ' rad/s'
+      ]);
+
+      requestAnimationFrame(render);
+    }
+
+    resize();
+    syncFromState();
+    requestAnimationFrame(render);
+  </script>
+</body>
+</html>
