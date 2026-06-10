@@ -68,4 +68,4 @@ $$
 F_Z=\frac{mv^2}{r}=\frac{m(\omega\cdot r)^2 }{r}=m\omega^2r
 $$
 
-[[]]
+https://lepoldthaddenschule.github.io/unterricht-material/physik/klasse-10/Zentripedalkraft_Animation.html
