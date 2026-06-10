@@ -40,3 +40,9 @@ $$
 ## 2. Ursache einer Kreisbewegung
 ### Ball/Gummistopfen loslassen - Wie fliegt er weiter?
 Um welche art von Bewegung handelt es sich?
+-> Beschleunigte Bewegung. (Richtung ändert sich)
+Hier muss eine Kraft wirken!
+In welche Richtung zeigt die Kraft?
+
+### Sicherung:
+Eine Kreisbewegung ist eine beschleunigte Bewegung. Auch wenn sich der Betrag der Geschwindigkeit nicht ändert. Es ändert sich die Richtung der Geschwindigkeit. Es muss demnach eine Kraft in Richtung der Änderung wirken. Diese Kraft heißt Zentripedalkraft ($F_Z$) und zeigt zum Mittelpunkt der KRreisbewegung.
