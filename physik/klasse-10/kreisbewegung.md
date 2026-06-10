@@ -46,3 +46,8 @@ In welche Richtung zeigt die Kraft?
 
 ### Sicherung:
 Eine Kreisbewegung ist eine beschleunigte Bewegung. Auch wenn sich der Betrag der Geschwindigkeit nicht ändert. Es ändert sich die Richtung der Geschwindigkeit. Es muss demnach eine Kraft in Richtung der Änderung wirken. Diese Kraft heißt Zentripedalkraft ($F_Z$) und zeigt zum Mittelpunkt der KRreisbewegung.
+
+### Experiment: Von was hängt diese Kraft ab
+
+Bobycar, Kurve oder Drehen mit Masse an Schnur.
+
