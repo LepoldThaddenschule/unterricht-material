@@ -76,4 +76,3 @@ $$
 Beispiel: Fahrrad um kleine und große Kurve
 2. $\omega$ konst.: $F_Z\propto r$
 Beispiel: Kettenkarusell
-
