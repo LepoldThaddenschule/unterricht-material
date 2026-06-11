@@ -77,7 +77,7 @@ Beispiel: Fahrrad um kleine und große Kurve
 2. $\omega$ konst.: $F_Z\propto r$
 Beispiel: Kettenkarusell
 
-### AB_Zentripedalkraft.pdf (auf githab)
+### AB_Zentripedalkraft.pdf (auf GitHub)
 [Zum AB](https://lepoldthaddenschule.github.io/unterricht-material/physik/klasse-10/AB_Zentripedalkraft.pdf)
 
 <details>
